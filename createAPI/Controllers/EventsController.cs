@@ -7,38 +7,48 @@ namespace createAPI.Controllers
     [ApiController]
     public class EventsController : ControllerBase
     {
-        static List<Event> events = new List<Event>{ new Event(new DateTime(2023, 09, 07)), new Event(new DateTime(2023, 09, 08)) , new Event(new DateTime(2023, 09, 09) ) };
+        static List<Event> events = new List<Event> { new Event(new DateTime(2023, 09, 07)), new Event(new DateTime(2023, 09, 08)), new Event(new DateTime(2023, 09, 09)) };
         // GET: api/<EventController>
         [HttpGet]
-        public IEnumerable<Event> Get()
+        public ActionResult Get()
         {
-            return events;
+            return Ok(events);
         }
 
         // POST api/<EventController>
         [HttpPost]
-        public void Post([FromBody] Event newEvent)
+        public ActionResult Post([FromBody] Event newEvent)
         {
-            events.Add(new Event(newEvent.Title,newEvent.Start,newEvent.End));
+            if (newEvent == null)
+                return NotFound();
+            newEvent.Id = ++Event.IndexId;
+            events.Add(newEvent);
+            return Ok();
         }
 
 
         // PUT api/<EventController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Event updateEvent)
+        public ActionResult Put(int id, [FromBody] Event updateEvent)
         {
             var eve = events.Find(e => e.Id == id);
+            if (eve == null)
+                return NotFound();
             eve.Title = updateEvent.Title;
             eve.Start = updateEvent.Start;
             eve.End = updateEvent.End;
+            return Ok();
         }
 
         // DELETE api/<EventController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
             var eve = events.Find(e => e.Id == id);
+            if (eve == null)
+                return NotFound();
             events.Remove(eve);
+            return Ok();
         }
     }
 }
