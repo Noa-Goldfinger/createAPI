@@ -7,12 +7,16 @@ namespace createAPI.Controllers
     [ApiController]
     public class EventsController : ControllerBase
     {
-        static List<Event> events = new List<Event> { new Event(new DateTime(2023, 09, 07)), new Event(new DateTime(2023, 09, 08)), new Event(new DateTime(2023, 09, 09)) };
+         IDataContext _dataContext;
+        public EventsController(IDataContext dataContext)
+        {
+            this.dataContext = dataContext;
+        }
         // GET: api/<EventController>
         [HttpGet]
         public ActionResult Get()
         {
-            return Ok(events);
+            return Ok(_dataContext.Events);
         }
 
         // POST api/<EventController>
@@ -22,7 +26,7 @@ namespace createAPI.Controllers
             if (newEvent == null)
                 return NotFound();
             newEvent.Id = ++Event.IndexId;
-            events.Add(newEvent);
+            _dataContext.Events.Add(newEvent);
             return Ok();
         }
 
@@ -31,7 +35,7 @@ namespace createAPI.Controllers
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] Event updateEvent)
         {
-            var eve = events.Find(e => e.Id == id);
+            var eve = _dataContext.Events.Find(e => e.Id == id);
             if (eve == null)
                 return NotFound();
             eve.Title = updateEvent.Title;
@@ -44,10 +48,10 @@ namespace createAPI.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            var eve = events.Find(e => e.Id == id);
+            var eve = _dataContext.Events.Find(e => e.Id == id);
             if (eve == null)
                 return NotFound();
-            events.Remove(eve);
+            _dataContext.Events.Remove(eve);
             return Ok();
         }
     }

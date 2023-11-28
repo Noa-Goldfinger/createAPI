@@ -19,6 +19,8 @@ namespace createAPI
                 policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
             }));
 
+            builder.Services.AddSingleton<IDataContext, DataContext>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

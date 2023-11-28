@@ -5,40 +5,43 @@ using Microsoft.AspNetCore.Mvc;
 namespace TestEvents
 {
     public class UnitTest1
-    {
+    { 
+                //לשאול איך אפש לעדכן ולהוסיף אם זה לקריאה בלבד
+        private readonly EventsController _eventsController;
 
+        public EventsControllerTest()
+        {
+            var context = new DataContextFake();
+            _eventsController = new EventsController(context);
+        }
         [Fact]
         public void GetTest_returnOkObjectResult()
         {
-            var controller = new EventsController();
 
-            var result = controller.Get();
+            var result = _eventsController.Get();
 
             Assert.IsType<OkObjectResult>(result);
         }
         [Fact]
         public void PostTest_returnOkResult()
         {
-            var controller = new EventsController();
             Event @event = new Event();
-            var result = controller.Post(@event);
+            var result = _eventsController.Post(@event);
             Assert.IsType<OkResult>(result);
         }
         [Fact]
         public void PutTest_returnOkResult()
         {
-            var controller = new EventsController();
             int id = 1;
             Event @event = new Event();
-            var result = controller.Put(id, @event);
+            var result = _eventsController.Put(id, @event);
             Assert.IsType<OkResult>(result);
         }
         [Fact]
         public void DeleteTest_returnOkResult()
         {
-            var controller = new EventsController();
             int id = 1;
-            var result = controller.Delete(id);
+            var result = _eventsController.Delete(id);
             Assert.IsType<OkResult>(result);
         }
     }
